@@ -1,0 +1,1103 @@
+<title>Fractura del Challenger</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@500;700;900&family=IBM+Plex+Sans:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+/* ===== Layout concept: mission-control dossier on a schematic dark field.
+   A fire(ductile/warm/safe) <-> ice(brittle/cold/failure) duality drives every
+   diagram, chip and chart on the page, mirroring the DBTT/Tg concept itself. ===== */
+:root{
+  --bg:#0a0e16; --bg2:#101728; --panel:#141d33; --panel-line:#263454;
+  --ink:#e8edf7; --ink-dim:#9aa7c2; --ink-faint:#5c6990;
+  --fire:#ff7a45; --fire-dim:#9a4a2c; --ice:#5ec8f2; --ice-dim:#2d5a78;
+  --amber:#ffb545; --danger:#ff4d5e; --ok:#54d6a0;
+  --steel:#8b93a1; --steel-dark:#4a5366;
+  --f-display:'Big Shoulders Display',system-ui,sans-serif;
+  --f-body:'IBM Plex Sans',system-ui,-apple-system,sans-serif;
+  --f-mono:'IBM Plex Mono',ui-monospace,Consolas,monospace;
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);margin:0;
+  padding-inline:0; line-height:1.55; overflow-x:hidden;}
+img{max-width:100%}
+[hidden]{display:none!important}
+a{color:var(--ice)}
+h1,h2,h3,h4{font-family:var(--f-display);font-weight:700;letter-spacing:.01em;
+  text-wrap:balance; margin:0 0 .4em; color:var(--ink);}
+h1{font-weight:900}
+.mono{font-family:var(--f-mono)}
+.eyebrow{font-family:var(--f-mono);font-size:.72rem;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ice);display:flex;align-items:center;gap:.5em;}
+.eyebrow::before{content:"";width:18px;height:2px;background:var(--ice);display:inline-block;}
+.wrap{max-width:1040px;margin:0 auto;padding-inline:clamp(16px,4vw,32px);}
+section{padding-block:clamp(48px,8vw,96px);}
+.section-head{max-width:720px;margin-bottom:clamp(28px,4vw,44px);}
+.section-head h2{font-size:clamp(1.8rem,4.4vw,2.7rem);}
+.section-head p{color:var(--ink-dim);font-size:1.02rem;max-width:62ch;}
+.card{background:var(--panel);border:1px solid var(--panel-line);border-radius:14px;}
+.btn{font-family:var(--f-mono);font-size:.82rem;letter-spacing:.03em;border:1px solid var(--panel-line);
+  background:var(--bg2);color:var(--ink);padding:.6em 1.1em;border-radius:8px;cursor:pointer;
+  transition:border-color .15s,background .15s,color .15s; white-space:nowrap;}
+.btn:hover{border-color:var(--ice);color:var(--ice)}
+.btn.primary{background:linear-gradient(135deg,var(--fire),var(--amber));color:#1a0f08;border:none;font-weight:600}
+.btn.primary:hover{filter:brightness(1.08);color:#1a0f08}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn:focus-visible,a:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--ice);outline-offset:2px}
+::selection{background:var(--ice);color:#06131c}
+
+/* ---------- top nav ---------- */
+.topnav{position:sticky; top:env(safe-area-inset-top,0px); z-index:50;
+  background:rgba(10,14,22,.86); backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--panel-line);}
+.topnav-in{max-width:1040px;margin:0 auto;padding:10px clamp(16px,4vw,32px);
+  display:flex;align-items:center;gap:18px;overflow-x:auto;scrollbar-width:none;}
+.topnav-in::-webkit-scrollbar{display:none}
+.topnav .brand{font-family:var(--f-display);font-weight:900;font-size:1.05rem;color:var(--ink);
+  white-space:nowrap; display:flex; align-items:baseline; gap:.4em;}
+.topnav .brand b{color:var(--fire)}
+.topnav nav{display:flex;gap:4px;font-family:var(--f-mono);font-size:.74rem;}
+.topnav nav a{color:var(--ink-dim);text-decoration:none;padding:.5em .7em;border-radius:6px;white-space:nowrap;}
+.topnav nav a:hover{color:var(--ink);background:var(--panel)}
+
+/* ---------- hero ---------- */
+.hero{padding-block:clamp(40px,9vw,88px) clamp(24px,6vw,48px); position:relative;}
+.hero-grid{display:grid; grid-template-columns:1.2fr .8fr; gap:clamp(24px,4vw,56px); align-items:center;}
+@media (max-width:760px){.hero-grid{grid-template-columns:1fr}}
+.hero h1{font-size:clamp(2.4rem,7vw,4.6rem); line-height:.96; margin-bottom:.25em;}
+.hero h1 .accent{background:linear-gradient(90deg,var(--fire),var(--amber));
+  -webkit-background-clip:text;background-clip:text;color:transparent;}
+.hero p.lede{color:var(--ink-dim);font-size:1.08rem;max-width:52ch;margin-bottom:1.6em;}
+.hero-actions{display:flex;gap:10px;flex-wrap:wrap;}
+.stat-strip{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--panel-line);
+  border:1px solid var(--panel-line); border-radius:12px; overflow:hidden; margin-top:clamp(24px,5vw,40px);}
+.stat{background:var(--bg2); padding:16px 14px;}
+.stat b{display:block;font-family:var(--f-mono);font-size:1.3rem;color:var(--fire);}
+.stat span{font-size:.74rem;color:var(--ink-faint);text-transform:uppercase;letter-spacing:.06em;}
+
+/* patch / badge graphic */
+.patch{position:relative; width:min(320px,86vw); aspect-ratio:1; margin-inline:auto;}
+.patch svg{width:100%;height:100%;display:block}
+
+/* ---------- viewer (3D) ---------- */
+.viewer-card{position:relative; border-radius:16px; overflow:hidden; background:radial-gradient(ellipse at 50% 20%,#0f1b30,#060a12 75%);
+  border:1px solid var(--panel-line);}
+.viewer-canvas-wrap{position:relative; aspect-ratio:16/10; width:100%;}
+canvas.three-canvas{display:block; width:100%; height:100%; touch-action:none; cursor:grab;}
+canvas.three-canvas:active{cursor:grabbing}
+.viewer-hint{position:absolute; left:14px; bottom:14px; font-family:var(--f-mono); font-size:.68rem;
+  color:var(--ink-faint); background:rgba(10,14,22,.55); padding:.4em .7em; border-radius:6px; pointer-events:none;}
+.viewer-badge{position:absolute; right:14px; top:14px; font-family:var(--f-mono); font-size:.66rem;
+  letter-spacing:.08em; text-transform:uppercase; color:var(--ice); border:1px solid var(--ice-dim);
+  background:rgba(10,14,22,.6); padding:.4em .7em; border-radius:999px;}
+.tooltip{position:absolute; max-width:230px; background:var(--bg2); border:1px solid var(--ice);
+  border-radius:10px; padding:.7em .85em; font-size:.82rem; pointer-events:none; transform:translate(-50%,-115%);
+  box-shadow:0 8px 24px rgba(0,0,0,.45); z-index:5;}
+.tooltip b{color:var(--ice); display:block; font-family:var(--f-mono); font-size:.72rem; letter-spacing:.04em;
+  text-transform:uppercase; margin-bottom:.25em;}
+.viewer-controls{display:flex; flex-wrap:wrap; gap:8px; padding:14px; border-top:1px solid var(--panel-line); background:var(--panel);}
+.legend{display:flex; flex-wrap:wrap; gap:14px; padding:12px 16px; font-size:.76rem; color:var(--ink-dim); border-top:1px solid var(--panel-line);}
+.legend span{display:inline-flex; align-items:center; gap:.45em;}
+.legend i{width:11px;height:11px;border-radius:3px;display:inline-block;}
+
+/* ---------- part info grid ---------- */
+.part-grid{display:grid; grid-template-columns:repeat(2,1fr); gap:12px; margin-top:20px;}
+@media (max-width:640px){.part-grid{grid-template-columns:1fr}}
+.part{padding:16px; border-radius:12px; cursor:pointer; transition:transform .15s,border-color .15s;}
+.part:hover{transform:translateY(-2px); border-color:var(--ice)}
+.part.active{border-color:var(--ice); background:var(--bg2)}
+.part .dot{width:10px;height:10px;border-radius:50%;display:inline-block;margin-right:.5em;}
+.part h4{font-size:.98rem; margin-bottom:.3em;}
+.part p{font-size:.84rem; color:var(--ink-dim); margin:0;}
+
+/* ---------- sequence player ---------- */
+.seq-shell{display:grid; grid-template-columns:1fr; gap:0;}
+.seq-head{display:flex; align-items:center; justify-content:space-between; gap:12px; padding:14px 16px;
+  border-bottom:1px solid var(--panel-line); flex-wrap:wrap;}
+.seq-step-label{font-family:var(--f-mono); font-size:.78rem; color:var(--ink-dim);}
+.seq-clock{font-family:var(--f-mono); font-size:1.1rem; color:var(--fire); font-variant-numeric:tabular-nums;}
+.seq-track{position:relative; height:6px; background:var(--bg2); margin:0 16px;}
+.seq-track-fill{position:absolute; inset:0; width:0%; background:linear-gradient(90deg,var(--ice),var(--fire)); border-radius:4px; transition:width .35s;}
+.seq-dots{display:flex; justify-content:space-between; padding:10px 16px 4px;}
+.seq-dot{width:9px;height:9px;border-radius:50%;background:var(--steel-dark); border:2px solid transparent;}
+.seq-dot.done{background:var(--ice)}
+.seq-dot.now{background:var(--fire); border-color:var(--amber)}
+.seq-body{padding:18px 16px 6px; display:grid; grid-template-columns:1fr; gap:6px;}
+.seq-title{font-family:var(--f-display); font-weight:700; font-size:1.3rem;}
+.seq-desc{color:var(--ink-dim); font-size:.92rem; max-width:62ch;}
+.seq-tag{display:inline-block; font-family:var(--f-mono); font-size:.68rem; letter-spacing:.06em; text-transform:uppercase;
+  padding:.3em .6em; border-radius:999px; margin-bottom:.6em;}
+.tag-normal{background:rgba(84,214,160,.14); color:var(--ok); border:1px solid rgba(84,214,160,.4)}
+.tag-warn{background:rgba(255,181,69,.14); color:var(--amber); border:1px solid rgba(255,181,69,.4)}
+.tag-crit{background:rgba(255,77,94,.14); color:var(--danger); border:1px solid rgba(255,77,94,.4)}
+.seq-controls{display:flex; gap:8px; padding:16px; flex-wrap:wrap;}
+
+/* ---------- thermal toggle ---------- */
+.thermo-toggle{display:flex; border:1px solid var(--panel-line); border-radius:999px; padding:3px; gap:3px; width:max-content;}
+.thermo-toggle button{border:none; background:transparent; color:var(--ink-dim); font-family:var(--f-mono); font-size:.78rem;
+  padding:.5em 1em; border-radius:999px; cursor:pointer;}
+.thermo-toggle button.on.warm{background:linear-gradient(135deg,var(--fire),var(--amber)); color:#1a0f08;}
+.thermo-toggle button.on.cold{background:linear-gradient(135deg,var(--ice),#2d8fc9); color:#06131c;}
+
+/* ---------- DBTT chart ---------- */
+.chart-card{padding:20px;}
+.chart-head{display:flex; justify-content:space-between; align-items:flex-start; gap:12px; flex-wrap:wrap; margin-bottom:6px;}
+.chart-readout{text-align:right}
+.chart-readout b{font-family:var(--f-mono); font-size:1.9rem; display:block; font-variant-numeric:tabular-nums;}
+.chart-readout span{font-size:.72rem; color:var(--ink-faint); text-transform:uppercase; letter-spacing:.06em;}
+canvas#dbttChart{width:100%; height:260px; display:block;}
+.slider-row{display:flex; align-items:center; gap:14px; margin-top:10px;}
+input[type=range]{flex:1; appearance:none; height:4px; background:linear-gradient(90deg,var(--ice),var(--steel-dark) 45%,var(--fire)); border-radius:4px;}
+input[type=range]::-webkit-slider-thumb{appearance:none; width:18px;height:18px;border-radius:50%;
+  background:var(--ink); border:3px solid var(--bg); box-shadow:0 0 0 2px var(--ice); cursor:pointer; margin-top:-7px;}
+input[type=range]::-moz-range-thumb{width:18px;height:18px;border-radius:50%; background:var(--ink); border:3px solid var(--bg);
+  box-shadow:0 0 0 2px var(--ice); cursor:pointer;}
+.slider-row .lab{font-family:var(--f-mono); font-size:.72rem; color:var(--ink-faint); white-space:nowrap;}
+
+/* ---------- analogy table ---------- */
+.table-wrap{overflow-x:auto; border:1px solid var(--panel-line); border-radius:12px;}
+table{border-collapse:collapse; width:100%; min-width:560px; font-size:.88rem;}
+th,td{padding:12px 14px; text-align:left; border-bottom:1px solid var(--panel-line); vertical-align:top;}
+th{font-family:var(--f-mono); font-size:.7rem; letter-spacing:.06em; text-transform:uppercase; color:var(--ink-faint); background:var(--bg2);}
+tr:last-child td{border-bottom:none}
+td.col-steel{color:var(--steel)}
+td.col-elast{color:var(--ice)}
+
+/* ---------- cause cards ---------- */
+.cause-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:14px;}
+.cause{padding:18px;}
+.cause .idx{font-family:var(--f-mono); color:var(--ink-faint); font-size:.74rem;}
+.cause h4{margin-top:.3em}
+.cause p{color:var(--ink-dim); font-size:.87rem}
+.cause .weight{margin-top:.8em; height:5px; background:var(--bg2); border-radius:3px; overflow:hidden;}
+.cause .weight i{display:block; height:100%; background:linear-gradient(90deg,var(--ice),var(--fire));}
+
+/* ---------- solutions ---------- */
+.sol-grid{display:grid; grid-template-columns:repeat(auto-fit,minmax(250px,1fr)); gap:14px;}
+.sol{padding:18px;}
+.sol .num{font-family:var(--f-display); font-weight:900; font-size:1.6rem; color:var(--ok); line-height:1}
+.sol h4{margin-top:.25em}
+.sol p{color:var(--ink-dim); font-size:.87rem}
+
+/* ---------- compare before/after ---------- */
+.compare{display:grid; grid-template-columns:1fr 1fr; gap:14px;}
+@media (max-width:640px){.compare{grid-template-columns:1fr}}
+.compare .pane{padding:16px;}
+.compare .pane h4{display:flex; align-items:center; gap:.5em; font-size:1rem}
+.compare .pane h4 i{width:9px;height:9px;border-radius:50%;}
+
+footer{border-top:1px solid var(--panel-line); padding-block:40px; margin-top:20px;}
+footer .wrap{display:flex; justify-content:space-between; gap:20px; flex-wrap:wrap; font-size:.82rem; color:var(--ink-faint);}
+footer a{color:var(--ink-dim)}
+footer ul{list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:.4em;}
+
+@media (prefers-reduced-motion:reduce){*{animation-duration:.001ms!important; transition-duration:.001ms!important;}}
+</style>
+
+<div class="topnav">
+  <div class="topnav-in">
+    <div class="brand"><b>STS-51L</b> · Dossier de Fractura</div>
+    <nav>
+      <a href="#articulacion">La junta</a>
+      <a href="#dbtt">Transición térmica</a>
+      <a href="#secuencia">Secuencia de falla</a>
+      <a href="#fractura">Mecánica de fractura</a>
+      <a href="#causas">Causas</a>
+      <a href="#soluciones">Soluciones</a>
+    </nav>
+  </div>
+</div>
+
+<header class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <div class="eyebrow">Análisis de ingeniería metalúrgica · Grupo N2</div>
+      <h1>La falla del <span class="accent">Challenger</span><br>leída como fractura</h1>
+      <p class="lede">28 de enero de 1986 — T+73 segundos. Una junta de campo, dos anillos elastoméricos y una
+        mañana a −2 °C. Esta no es solo la historia de un accidente: es un caso de estudio de
+        <b>tenacidad</b>, <b>temperatura de transición</b> y <b>concentración de esfuerzos</b>, explicado con
+        el mismo lenguaje que usamos para el acero — aplicado a la junta que selló el booster.</p>
+      <div class="hero-actions">
+        <a href="#articulacion" class="btn primary">Explorar la junta en 3D ↓</a>
+        <a href="#secuencia" class="btn">Ver secuencia de falla</a>
+      </div>
+      <div class="stat-strip">
+        <div class="stat"><b>−2 °C</b><span>Temp. de lanzamiento</span></div>
+        <div class="stat"><b>73 s</b><span>Tiempo hasta la falla</span></div>
+        <div class="stat"><b>0,28 cm</b><span>Apertura máx. de junta</span></div>
+      </div>
+    </div>
+    <div class="patch" aria-hidden="true">
+      <svg viewBox="0 0 320 320">
+        <defs>
+          <linearGradient id="gFire" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stop-color="#ff7a45"/><stop offset="1" stop-color="#ffb545"/>
+          </linearGradient>
+          <linearGradient id="gIce" x1="0" y1="1" x2="1" y2="0">
+            <stop offset="0" stop-color="#2d5a78"/><stop offset="1" stop-color="#5ec8f2"/>
+          </linearGradient>
+        </defs>
+        <circle cx="160" cy="160" r="150" fill="#0d1526" stroke="#263454" stroke-width="2"/>
+        <circle cx="160" cy="160" r="150" fill="none" stroke="url(#gFire)" stroke-width="3" stroke-dasharray="4 10" opacity=".6"/>
+        <path d="M160 40 A120 120 0 0 1 160 280" fill="none" stroke="url(#gFire)" stroke-width="10" stroke-linecap="round"/>
+        <path d="M160 280 A120 120 0 0 1 160 40" fill="none" stroke="url(#gIce)" stroke-width="10" stroke-linecap="round" transform="rotate(180 160 160)" opacity="0"/>
+        <path d="M160 40 A120 120 0 0 0 160 280" fill="none" stroke="url(#gIce)" stroke-width="10" stroke-linecap="round"/>
+        <g transform="translate(160,160)">
+          <rect x="-14" y="-95" width="28" height="150" rx="10" fill="#8b93a1"/>
+          <circle cx="0" cy="-95" r="20" fill="#dfe4ee"/>
+          <path d="M-14 42 L-40 95 L-14 80 Z" fill="url(#gFire)"/>
+          <path d="M14 42 L40 95 L14 80 Z" fill="url(#gFire)"/>
+          <ellipse cx="0" cy="70" rx="13" ry="26" fill="url(#gFire)"/>
+        </g>
+        <text x="160" y="300" text-anchor="middle" font-family="IBM Plex Mono" font-size="12" fill="#9aa7c2" letter-spacing="2">28·ENE·1986</text>
+        <text x="160" y="28" text-anchor="middle" font-family="Big Shoulders Display" font-weight="700" font-size="17" fill="#e8edf7" letter-spacing="3">CHALLENGER</text>
+      </svg>
+    </div>
+  </div>
+</header>
+
+<main>
+<!-- ============================== 1. LA JUNTA EN 3D ============================== -->
+<section id="articulacion">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">01 · Anatomía de la falla</div>
+      <h2>La junta de campo del booster, en 3D</h2>
+      <p>Cada segmento del cohete acelerador sólido (SRB) se une al siguiente mediante una <b>junta tang-and-clevis</b>:
+        un extremo macho (<i>tang</i>) se inserta en un extremo hembra (<i>clevis</i>), y dos anillos tóricos —el
+        O-ring primario y el secundario— sellan el gas de combustión a 3 200 °C y ~700 psi. Gira el modelo, haz zoom
+        y toca cada pieza para ver su rol y su material.</p>
+    </div>
+
+    <div class="viewer-card card">
+      <div class="viewer-canvas-wrap">
+        <canvas class="three-canvas" id="jointCanvas"></canvas>
+        <div class="viewer-badge" id="viewerBadge">VISTA: CORTE 270°</div>
+        <div class="viewer-hint">Arrastra para rotar · rueda para zoom · toca una pieza</div>
+        <div class="tooltip" id="tooltip" hidden></div>
+      </div>
+      <div class="viewer-controls">
+        <button class="btn" id="btnExplode">Vista explosionada</button>
+        <button class="btn" id="btnReset">Reiniciar cámara</button>
+        <button class="btn" id="btnSpin">Auto-rotación: ON</button>
+        <span style="flex:1"></span>
+        <div class="thermo-toggle" id="thermoToggleMini">
+          <button class="warm on" data-t="warm">🔥 24 °C</button>
+          <button class="cold" data-t="cold">❄ −2 °C</button>
+        </div>
+      </div>
+      <div class="legend">
+        <span><i style="background:#8b93a1"></i>Carcasa de acero D6AC (tang / clevis)</span>
+        <span><i style="background:#ff7a45"></i>Masilla de zinc-cromato</span>
+        <span><i style="background:#5ec8f2"></i>O-ring primario</span>
+        <span><i style="background:#2d8fc9"></i>O-ring secundario</span>
+        <span><i style="background:#ffb545"></i>Gas de combustión (fuga)</span>
+      </div>
+    </div>
+
+    <div class="part-grid" id="partGrid">
+      <div class="part card" data-part="clevis"><h4><span class="dot" style="background:#8b93a1"></span>Clevis (extremo hembra)</h4>
+        <p>Acero D6AC templado y revenido. Recibe el tang del segmento inferior y aloja los dos O-rings en su pared interior.</p></div>
+      <div class="part card" data-part="tang"><h4><span class="dot" style="background:#aab2c0"></span>Tang (extremo macho)</h4>
+        <p>Se inserta dentro del clevis. Bajo presión interna, la carcasa flexiona y el tang tiende a separarse — la llamada <b>"rotación de junta"</b>.</p></div>
+      <div class="part card" data-part="primary"><h4><span class="dot" style="background:#5ec8f2"></span>O-ring primario</h4>
+        <p>Vitón (fluoroelastómero). Debe expandirse y "resellar" el hueco en &lt;0,6 s al encender el motor. Es la pieza que falló.</p></div>
+      <div class="part card" data-part="secondary"><h4><span class="dot" style="background:#2d8fc9"></span>O-ring secundario</h4>
+        <p>Respaldo del primario. En la junta rotada, pierde parte de su capacidad de sellar si el primario ya cedió.</p></div>
+      <div class="part card" data-part="putty"><h4><span class="dot" style="background:#ff7a45"></span>Masilla zinc-cromato</h4>
+        <p>Retarda el paso de gas caliente hacia los O-rings. En frío se endurece y deja de ser homogénea, retrasando el sellado.</p></div>
+      <div class="part card" data-part="gap"><h4><span class="dot" style="background:#ffb545"></span>Hueco de rotación</h4>
+        <p>Se abre entre 0,017" y 0,029" (≈0,4–0,7 mm) al ignitar. Actúa como un entalle que concentra el flujo de gas — el equivalente sellante de una grieta.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 2. DBTT / Tg ============================== -->
+<section id="dbtt" style="background:linear-gradient(180deg,transparent,rgba(94,200,242,.05),transparent)">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">02 · El concepto clave</div>
+      <h2>Una transición dúctil–frágil, pero en un elastómero</h2>
+      <p>En metalurgia conocemos la <b>temperatura de transición dúctil–frágil (DBTT)</b>: por debajo de ella, un
+        acero pierde tenacidad y absorbe mucha menos energía antes de fracturar (ensayo Charpy). El Vitón del O-ring
+        no fractura — pero sufre un fenómeno paralelo: por debajo de su <b>temperatura de transición vítrea (Tg)</b>
+        efectiva de servicio, las cadenas del polímero pierden movilidad y la <b>resiliencia</b> (velocidad con que
+        recupera su forma tras comprimirse) cae en picada. Mueve el deslizador y observa el anillo.</p>
+    </div>
+
+    <div class="card chart-card">
+      <div class="chart-head">
+        <div>
+          <div class="eyebrow" style="margin-bottom:.3em">Temperatura del O-ring en el instante del sello</div>
+          <div style="font-family:var(--f-mono); font-size:.8rem; color:var(--ink-faint)">Basado en los ensayos de resiliencia citados en el Informe Rogers (1986)</div>
+        </div>
+        <div class="chart-readout">
+          <b id="chartTempLabel">24 °C</b>
+          <span id="chartResLabel">Resiliencia ≈ 95 %</span>
+        </div>
+      </div>
+      <canvas id="dbttChart" width="900" height="260"></canvas>
+      <div class="slider-row">
+        <span class="lab">−10 °C</span>
+        <input type="range" id="tempSlider" min="-10" max="25" value="24" step="0.5">
+        <span class="lab">25 °C</span>
+      </div>
+      <div class="slider-row" style="margin-top:4px">
+        <span class="lab" style="flex:1">❄ Lanzamiento real: −2 °C (punto rojo)</span>
+        <span class="lab">🔥 Vuelos previos típicos: 19–27 °C (puntos grises)</span>
+      </div>
+    </div>
+
+    <div class="part-grid" style="margin-top:28px; grid-template-columns:1fr 1fr">
+      <div class="card" style="padding:20px">
+        <div class="eyebrow" style="margin-bottom:.5em">El experimento de Feynman</div>
+        <p style="color:var(--ink-dim); font-size:.92rem">Durante la audiencia pública de la Comisión Rogers, Richard
+          Feynman sumergió una muestra de junta en agua con hielo y la comprimió con una prensa: al soltarla, el
+          material tardó varios segundos en recuperar su forma — en operación normal debe hacerlo en milisegundos.
+          Fue la demostración pública de que, a la temperatura de lanzamiento, el O-ring <b>ya no era un sello
+          dinámico</b>, sino un material rígido incapaz de seguir el movimiento de la junta.</p>
+      </div>
+      <div class="card" style="padding:20px">
+        <div class="eyebrow" style="margin-bottom:.5em">Precisión necesaria</div>
+        <p style="color:var(--ink-dim); font-size:.92rem">La física no es idéntica a la del acero: la DBTT se origina
+          en la movilidad de dislocaciones y el cambio de mecanismo de fractura (micro-hueco → clivaje); la caída de
+          resiliencia del Vitón se origina en la movilidad de cadenas poliméricas cerca de Tg. Se comparan porque
+          <b>ambas son transiciones térmicas críticas que degradan la capacidad del material de absorber energía
+          y deformarse</b> — la lectura de ingeniería (definir una temperatura mínima de operación segura) es la misma.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 3. SECUENCIA ============================== -->
+<section id="secuencia">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">03 · Reconstrucción</div>
+      <h2>Los 73 segundos, paso a paso</h2>
+      <p>Reproduce la secuencia sobre el mismo modelo 3D de la junta. Compara qué ocurre con una junta a
+        temperatura normal frente a la junta real, fría, del 28 de enero.</p>
+    </div>
+
+    <div class="card seq-shell">
+      <div class="seq-head">
+        <div class="seq-step-label" id="seqStepLabel">Paso 1 / 6</div>
+        <div class="seq-clock mono" id="seqClock">T − 00:00:03</div>
+      </div>
+      <div class="seq-track"><div class="seq-track-fill" id="seqFill"></div></div>
+      <div class="seq-dots" id="seqDots"></div>
+      <div class="seq-body">
+        <span class="seq-tag tag-normal" id="seqTag">NOMINAL</span>
+        <div class="seq-title" id="seqTitle">Cuenta regresiva</div>
+        <div class="seq-desc" id="seqDesc">La carcasa de acero D6AC está intacta; los O-rings de Vitón, bien
+          asentados en sus ranuras, esperan la ignición.</div>
+      </div>
+      <div class="seq-controls">
+        <button class="btn primary" id="btnPlay">▶ Reproducir secuencia</button>
+        <button class="btn" id="btnPrev">← Anterior</button>
+        <button class="btn" id="btnNext">Siguiente →</button>
+        <span style="flex:1"></span>
+        <span class="lab mono" style="align-self:center;color:var(--ink-faint)">Condición de junta:</span>
+        <div class="thermo-toggle" id="thermoToggleSeq">
+          <button class="warm on" data-t="warm">🔥 Normal</button>
+          <button class="cold" data-t="cold">❄ Vuelo real</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 4. MECÁNICA DE FRACTURA ============================== -->
+<section id="fractura" style="background:linear-gradient(180deg,transparent,rgba(255,122,69,.05),transparent)">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">04 · Lectura de ingeniería</div>
+      <h2>Lo que dice la mecánica de fractura</h2>
+      <p>Tres ideas del curso de fractura, aplicadas a una falla que no es "un acero que se rompe" sino un
+        sello que deja de sellar — con el mismo marco conceptual.</p>
+    </div>
+
+    <div class="part-grid" style="grid-template-columns:repeat(3,1fr)">
+      <div class="card" style="padding:18px">
+        <div class="eyebrow" style="margin-bottom:.4em">Concentración de esfuerzos</div>
+        <h4 style="font-size:1rem">El hueco como entalle</h4>
+        <p style="color:var(--ink-dim); font-size:.87rem">El hueco de rotación (0,4–0,7 mm) actúa como un entalle
+          geométrico: concentra el paso del gas igual que un entalle concentra esfuerzo (factor K<sub>t</sub>) en
+          una placa agrietada. El flujo de gas "encuentra" la trayectoria de menor resistencia, igual que una
+          grieta crece por la zona de menor tenacidad local.</p>
+      </div>
+      <div class="card" style="padding:18px">
+        <div class="eyebrow" style="margin-bottom:.4em">Criterio energético</div>
+        <h4 style="font-size:1rem">Fuerza motriz vs. resistencia</h4>
+        <p style="color:var(--ink-dim); font-size:.87rem">Como en Griffith (G ≥ G<sub>IC</sub> para que una grieta
+          crezca), aquí hay una fuerza motriz (presión y temperatura del gas) contra una resistencia (la capacidad
+          del O-ring de expandirse y sellar a tiempo). En frío la resistencia cae más rápido que la fuerza motriz —
+          y el "crecimiento" del defecto de sellado se vuelve inevitable.</p>
+      </div>
+      <div class="card" style="padding:18px">
+        <div class="eyebrow" style="margin-bottom:.4em">Tenacidad vs. temperatura</div>
+        <h4 style="font-size:1rem">La curva que debió respetarse</h4>
+        <p style="color:var(--ink-dim); font-size:.87rem">Igual que se exige K<sub>IC</sub> mínimo a la
+          temperatura de servicio más baja esperada, Thiokol tenía datos de erosión del O-ring correlacionados con
+          temperatura desde 1985. La curva existía — lo que faltó fue tratarla como un límite operativo (una
+          "temperatura de transición de servicio") y no como una anomalía aislada.</p>
+      </div>
+    </div>
+
+    <div class="table-wrap" style="margin-top:28px">
+      <table>
+        <thead><tr><th>Aspecto</th><th>Acero por debajo de su DBTT</th><th>O-ring de Vitón por debajo de su Tg de servicio</th></tr></thead>
+        <tbody>
+          <tr><td>Qué cae</td><td class="col-steel">Energía absorbida al fracturar (ensayo Charpy)</td><td class="col-elast">Resiliencia / velocidad de recuperación elástica</td></tr>
+          <tr><td>Mecanismo microscópico</td><td class="col-steel">Menor movilidad de dislocaciones → clivaje en vez de deslizamiento</td><td class="col-elast">Menor movilidad de cadenas poliméricas cerca de Tg</td></tr>
+          <tr><td>Consecuencia funcional</td><td class="col-steel">Fractura frágil con poca deformación previa</td><td class="col-elast">Sello "rígido" que no sigue el movimiento de la junta</td></tr>
+          <tr><td>Cómo se previene</td><td class="col-steel">Definir T mínima de operación &gt; DBTT + margen</td><td class="col-elast">Definir T mínima de lanzamiento &gt; Tg de servicio + margen</td></tr>
+          <tr><td>En el Challenger</td><td class="col-steel">Carcasa D6AC: sin problema — su DBTT está muy por debajo de −2 °C</td><td class="col-elast">O-ring Vitón: sí fue crítico — su resiliencia ya era baja a esa temperatura</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p style="color:var(--ink-faint); font-size:.82rem; margin-top:10px">Nota: la carcasa de acero <b>no</b> fue la pieza que falló — se incluye en la tabla solo como contraste, para no confundir "fractura metálica" con lo que realmente ocurrió: una pérdida de sellado elastomérico.</p>
+  </div>
+</section>
+
+<!-- ============================== 5. CAUSAS ============================== -->
+<section id="causas">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">05 · Alternativas consideradas</div>
+      <h2>No fue una sola causa</h2>
+      <p>La Comisión Rogers identificó varios factores que se combinaron. Aquí, ordenados por su peso técnico
+        dentro del mecanismo de falla (el peso organizacional se incluye por completitud, no es el foco de este análisis).</p>
+    </div>
+    <div class="cause-grid">
+      <div class="cause card">
+        <div class="idx">01 · Material</div>
+        <h4>Resiliencia del Vitón a baja T°</h4>
+        <p>Causa física directa: el O-ring no pudo expandirse a tiempo para resellar el hueco de rotación.</p>
+        <div class="weight"><i style="width:92%"></i></div>
+      </div>
+      <div class="cause card">
+        <div class="idx">02 · Diseño</div>
+        <h4>Junta tang-and-clevis sensible a rotación</h4>
+        <p>El diseño permitía que la presión interna abriera el hueco en vez de cerrarlo — dependía del tiempo de respuesta del O-ring para sellar.</p>
+        <div class="weight"><i style="width:85%"></i></div>
+      </div>
+      <div class="cause card">
+        <div class="idx">03 · Proceso</div>
+        <h4>Masilla de zinc-cromato endurecida</h4>
+        <p>En frío, la masilla no transmitió la presión de forma uniforme, retrasando el "soplo" de presión que normalmente ayuda a asentar el O-ring.</p>
+        <div class="weight"><i style="width:55%"></i></div>
+      </div>
+      <div class="cause card">
+        <div class="idx">04 · Histórico</div>
+        <h4>Erosión ya observada en vuelos previos</h4>
+        <p>Vuelos anteriores (incluido STS-51C a 11,7 °C) ya mostraban erosión del O-ring — una señal de advertencia disponible desde un año antes.</p>
+        <div class="weight"><i style="width:60%"></i></div>
+      </div>
+      <div class="cause card">
+        <div class="idx">05 · Organizacional</div>
+        <h4>Decisión de lanzar pese a la advertencia</h4>
+        <p>Ingenieros de Morton Thiokol recomendaron no lanzar por debajo de 12 °C; la recomendación fue revertida bajo presión de gestión. No es una causa metalúrgica, pero sin ella el riesgo técnico no se habría materializado esa mañana.</p>
+        <div class="weight"><i style="width:70%"></i></div>
+      </div>
+      <div class="cause card">
+        <div class="idx">06 · Validación</div>
+        <h4>Rango de calificación insuficiente</h4>
+        <p>El O-ring nunca fue certificado para operar con garantías por debajo de ~12 °C; se lanzó 14 °C por debajo de ese límite de datos conocidos.</p>
+        <div class="weight"><i style="width:78%"></i></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================== 6. SOLUCIONES ============================== -->
+<section id="soluciones" style="background:linear-gradient(180deg,transparent,rgba(84,214,160,.05),transparent)">
+  <div class="wrap">
+    <div class="section-head">
+      <div class="eyebrow">06 · Rediseño</div>
+      <h2>Lo que cambió después</h2>
+      <p>La redundancia por sí sola no bastaba: había que eliminar el mecanismo físico de apertura del hueco,
+        no solo añadir más sellos.</p>
+    </div>
+
+    <div class="compare" style="margin-bottom:22px">
+      <div class="pane card">
+        <h4><i style="background:var(--danger)"></i>Junta original (1986)</h4>
+        <p style="color:var(--ink-dim); font-size:.87rem">La presión interna flexiona la carcasa y abre un hueco
+          entre tang y clevis ("rotación de junta"). El sellado depende de que el O-ring se expanda más rápido
+          que el hueco se abre — una carrera contra el tiempo que la baja temperatura hacía perder.</p>
+      </div>
+      <div class="pane card">
+        <h4><i style="background:var(--ok)"></i>Junta rediseñada (1988)</h4>
+        <p style="color:var(--ink-dim); font-size:.87rem">Una <b>"capture feature"</b> (reborde de captura) mecaniza
+          el clevis para que la carcasa no pueda rotar hacia afuera: el hueco casi no se abre, sin importar la
+          temperatura. El sellado deja de depender de una carrera contra el tiempo.</p>
+      </div>
+    </div>
+
+    <div class="sol-grid">
+      <div class="sol card">
+        <div class="num">01</div>
+        <h4>Reborde de captura (capture feature)</h4>
+        <p>Rediseño mecánico del clevis que impide la rotación de junta en su origen — ataca la causa raíz, no el síntoma.</p>
+      </div>
+      <div class="sol card">
+        <div class="num">02</div>
+        <h4>Tercer O-ring</h4>
+        <p>Un O-ring adicional de respaldo, más la mejora de las tolerancias dimensionales de fabricación de cada junta.</p>
+      </div>
+      <div class="sol card">
+        <div class="num">03</div>
+        <h4>Calentadores en la junta</h4>
+        <p>Resistencias eléctricas que mantienen el O-ring por encima de su temperatura mínima certificada antes del lanzamiento.</p>
+      </div>
+      <div class="sol card">
+        <div class="num">04</div>
+        <h4>Criterio de lanzamiento por temperatura</h4>
+        <p>Se estableció un mínimo de 4 °C ambiente para autorizar el lanzamiento — convertir la curva de resiliencia en un límite operativo real.</p>
+      </div>
+      <div class="sol card">
+        <div class="num">05</div>
+        <h4>Caracterización completa del material</h4>
+        <p>Nuevos ensayos de resiliencia y compresión del Vitón en todo el rango de temperatura de operación, no solo en condiciones típicas.</p>
+      </div>
+      <div class="sol card">
+        <div class="num">06</div>
+        <h4>Cadena de reporte de anomalías</h4>
+        <p>Un proceso formal para que una señal de advertencia técnica (como la erosión de 1985) no dependa de que se escale verbalmente en una llamada la noche anterior.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</main>
+
+<footer>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow" style="margin-bottom:.6em">Dossier técnico · Grupo N2</div>
+      <p style="max-width:46ch">Elaborado como material didáctico de ingeniería metalúrgica y mecánica de fractura.
+        Las cifras de temperatura, tiempo y holgura son las reportadas públicamente por la investigación oficial del
+        accidente; la curva de resiliencia es una representación conceptual de esos hallazgos, no un dato de ensayo exacto.</p>
+    </div>
+    <ul>
+      <li class="eyebrow" style="margin-bottom:.2em">Fuentes</li>
+      <li><a href="https://history.nasa.gov/rogersrep/51lcover.htm" target="_blank" rel="noopener">Informe de la Comisión Rogers (1986)</a></li>
+      <li><a href="https://er.jsc.nasa.gov/seh/explode.html" target="_blank" rel="noopener">NASA — Report on the Space Shuttle Challenger Accident</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+(function(){
+  "use strict";
+
+  /* =========================================================
+     THREE.JS — modelo esquemático de la junta tang-and-clevis
+     ========================================================= */
+  var canvas = document.getElementById('jointCanvas');
+  var wrap = canvas.parentElement;
+  var tooltip = document.getElementById('tooltip');
+  var viewerBadge = document.getElementById('viewerBadge');
+
+  var scene = new THREE.Scene();
+  scene.background = null;
+
+  var camera = new THREE.PerspectiveCamera(42, 1, 0.1, 100);
+  var camDist = 9.5, camYaw = 0.55, camPitch = 0.28;
+  function updateCamera(){
+    camera.position.set(
+      camDist*Math.sin(camYaw)*Math.cos(camPitch),
+      camDist*Math.sin(camPitch)+0.4,
+      camDist*Math.cos(camYaw)*Math.cos(camPitch)
+    );
+    camera.lookAt(0,0.2,0);
+  }
+  updateCamera();
+
+  var renderer = new THREE.WebGLRenderer({canvas:canvas, antialias:true, alpha:true});
+  renderer.setPixelRatio(Math.min(devicePixelRatio||1,2));
+
+  function resize(){
+    var w = wrap.clientWidth, h = wrap.clientHeight;
+    renderer.setSize(w,h,false);
+    camera.aspect = w/h;
+    camera.updateProjectionMatrix();
+  }
+  window.addEventListener('resize', resize);
+
+  // lights
+  scene.add(new THREE.AmbientLight(0x8893b8, 0.65));
+  var key = new THREE.DirectionalLight(0xfff2e0, 1.1); key.position.set(4,6,5); scene.add(key);
+  var rim = new THREE.DirectionalLight(0x5ec8f2, 0.5); rim.position.set(-5,-2,-4); scene.add(rim);
+  var fillL = new THREE.PointLight(0xff7a45, 0.6, 20); fillL.position.set(-3,1,3); scene.add(fillL);
+
+  var jointGroup = new THREE.Group();
+  scene.add(jointGroup);
+
+  var THETA_LEN = Math.PI*1.5; // 270° cutaway
+  var THETA_START = Math.PI*0.65;
+
+  var steelMat = new THREE.MeshStandardMaterial({color:0x8b93a1, metalness:0.55, roughness:0.42, side:THREE.DoubleSide});
+  var steelMatDark = new THREE.MeshStandardMaterial({color:0x6b7484, metalness:0.5, roughness:0.5, side:THREE.DoubleSide});
+  var puttyMat = new THREE.MeshStandardMaterial({color:0xff7a45, metalness:0.05, roughness:0.85});
+  var gasMat = new THREE.MeshStandardMaterial({color:0xffb545, emissive:0xff6a1a, emissiveIntensity:0.6, transparent:true, opacity:0});
+
+  function ringMat(hex){ return new THREE.MeshStandardMaterial({color:hex, metalness:0.1, roughness:0.55, emissive:hex, emissiveIntensity:0.08}); }
+  var primaryMat = ringMat(0x5ec8f2);
+  var secondaryMat = ringMat(0x2d8fc9);
+
+  // clevis (lower segment, female, cutaway tube)
+  var clevisGeo = new THREE.CylinderGeometry(1.62,1.62,2.6,48,1,true,THETA_START,THETA_LEN);
+  var clevis = new THREE.Mesh(clevisGeo, steelMat);
+  clevis.position.y = -1.5;
+  clevis.userData.id = 'clevis';
+  jointGroup.add(clevis);
+  var clevisInnerGeo = new THREE.CylinderGeometry(1.45,1.45,1.3,48,1,true,THETA_START,THETA_LEN);
+  var clevisInner = new THREE.Mesh(clevisInnerGeo, steelMatDark);
+  clevisInner.position.y = -0.85;
+  clevisInner.userData.id = 'clevis';
+  jointGroup.add(clevisInner);
+
+  // tang (upper segment, male)
+  var tangGeo = new THREE.CylinderGeometry(1.32,1.32,3.0,48,1,true,THETA_START,THETA_LEN);
+  var tang = new THREE.Mesh(tangGeo, steelMat);
+  tang.position.y = 1.1;
+  tang.userData.id = 'tang';
+  jointGroup.add(tang);
+  var tangCap = new THREE.Mesh(new THREE.RingGeometry(0,1.32,48,1,THETA_START,THETA_LEN), steelMat);
+  tangCap.rotation.x = -Math.PI/2; tangCap.position.y = -0.4; tangCap.userData.id='tang';
+  jointGroup.add(tangCap);
+
+  // O-rings sit in the annulus between tang (r1.32) and clevis (r1.45/1.62)
+  var primaryRing = new THREE.Mesh(new THREE.TorusGeometry(1.40,0.085,16,64,THETA_LEN), primaryMat);
+  primaryRing.rotation.x = Math.PI/2; primaryRing.rotation.z = THETA_START; primaryRing.position.y = -0.62;
+  primaryRing.userData.id = 'primary';
+  jointGroup.add(primaryRing);
+
+  var secondaryRing = new THREE.Mesh(new THREE.TorusGeometry(1.40,0.085,16,64,THETA_LEN), secondaryMat);
+  secondaryRing.rotation.x = Math.PI/2; secondaryRing.rotation.z = THETA_START; secondaryRing.position.y = -0.18;
+  secondaryRing.userData.id = 'secondary';
+  jointGroup.add(secondaryRing);
+
+  // putty bead at the joint tip
+  var putty = new THREE.Mesh(new THREE.TorusGeometry(1.55,0.07,10,64,THETA_LEN), puttyMat);
+  putty.rotation.x = Math.PI/2; putty.rotation.z = THETA_START; putty.position.y = -0.42;
+  putty.userData.id = 'putty';
+  jointGroup.add(putty);
+
+  // gap indicator (thin highlighted band) -- scaled/animated to show opening
+  var gapGeo = new THREE.CylinderGeometry(1.345,1.345,0.001,48,1,true,THETA_START,THETA_LEN);
+  var gapMat = new THREE.MeshBasicMaterial({color:0xffb545, transparent:true, opacity:0.0, side:THREE.DoubleSide});
+  var gapBand = new THREE.Mesh(gapGeo, gapMat);
+  gapBand.position.y = -0.62; gapBand.userData.id='gap';
+  jointGroup.add(gapBand);
+
+  // hot gas particles (blow-by jet)
+  var PCOUNT = 260;
+  var pPos = new Float32Array(PCOUNT*3);
+  var pSeed = [];
+  for(var i=0;i<PCOUNT;i++){
+    var a = THETA_START + Math.random()*THETA_LEN;
+    pPos[i*3]   = Math.cos(a)*1.4;
+    pPos[i*3+1] = -0.62;
+    pPos[i*3+2] = Math.sin(a)*1.4;
+    pSeed.push({a:a, speed:0.4+Math.random()*0.9, life:Math.random()});
+  }
+  var pGeo = new THREE.BufferGeometry();
+  pGeo.setAttribute('position', new THREE.BufferAttribute(pPos,3));
+  var pMat = new THREE.PointsMaterial({color:0xffc56b, size:0.085, transparent:true, opacity:0.0, depthWrite:false});
+  var gasParticles = new THREE.Points(pGeo, pMat);
+  jointGroup.add(gasParticles);
+  var gasIntensity = 0; // 0..1 target
+
+  // labeled hotspots (small emissive spheres users can click, placed outside cutaway for visibility)
+  var hotspotDefs = [
+    {id:'clevis',   pos:[1.62*Math.cos(THETA_START-0.25), -1.1, 1.62*Math.sin(THETA_START-0.25)]},
+    {id:'tang',     pos:[1.32*Math.cos(THETA_START-0.25),  1.3, 1.32*Math.sin(THETA_START-0.25)]},
+    {id:'primary',  pos:[1.4*Math.cos(THETA_START+THETA_LEN+0.22), -0.62, 1.4*Math.sin(THETA_START+THETA_LEN+0.22)]},
+    {id:'secondary',pos:[1.4*Math.cos(THETA_START+THETA_LEN+0.22), -0.18, 1.4*Math.sin(THETA_START+THETA_LEN+0.22)]},
+    {id:'putty',    pos:[1.58*Math.cos(THETA_START+THETA_LEN+0.22), -0.42, 1.58*Math.sin(THETA_START+THETA_LEN+0.22)]},
+    {id:'gap',      pos:[1.34*Math.cos(THETA_START-0.1), -0.62, 1.34*Math.sin(THETA_START-0.1)]}
+  ];
+  var hotspotColors = {clevis:0x8b93a1, tang:0xaab2c0, primary:0x5ec8f2, secondary:0x2d8fc9, putty:0xff7a45, gap:0xffb545};
+  var hotspots = [];
+  hotspotDefs.forEach(function(d){
+    var m = new THREE.Mesh(new THREE.SphereGeometry(0.07,16,16),
+      new THREE.MeshBasicMaterial({color:hotspotColors[d.id]}));
+    m.position.set(d.pos[0],d.pos[1],d.pos[2]);
+    m.userData.id = d.id;
+    jointGroup.add(m);
+    hotspots.push(m);
+  });
+
+  var pickables = [clevis, clevisInner, tang, tangCap, primaryRing, secondaryRing, putty, gapBand].concat(hotspots);
+
+  var partInfo = {
+    clevis:{title:'Clevis', text:'Extremo hembra de acero D6AC templado y revenido.'},
+    tang:{title:'Tang', text:'Extremo macho; bajo presión interna tiende a separarse del clevis.'},
+    primary:{title:'O-ring primario', text:'Vitón. Debe resellar en <0,6 s — la pieza que falló en frío.'},
+    secondary:{title:'O-ring secundario', text:'Respaldo del primario, también afectado por la rigidez en frío.'},
+    putty:{title:'Masilla zinc-cromato', text:'Se endurece en frío y retrasa el "soplo" de presión hacia los O-rings.'},
+    gap:{title:'Hueco de rotación', text:'0,4–0,7 mm de apertura; concentra el paso del gas como un entalle.'}
+  };
+
+  // ---- interaction: drag to rotate, wheel to zoom, click to inspect ----
+  var dragging=false, lastX=0, lastY=0, autoSpin=true;
+  canvas.addEventListener('pointerdown', function(e){
+    dragging=true; lastX=e.clientX; lastY=e.clientY; canvas.setPointerCapture(e.pointerId);
+  });
+  canvas.addEventListener('pointerup', function(e){ dragging=false; });
+  canvas.addEventListener('pointerleave', function(){ dragging=false; });
+  canvas.addEventListener('pointermove', function(e){
+    if(dragging){
+      camYaw += (e.clientX-lastX)*0.008;
+      camPitch = Math.max(-0.5,Math.min(0.85, camPitch + (e.clientY-lastY)*0.006));
+      lastX=e.clientX; lastY=e.clientY; updateCamera();
+    }
+    pickAtPointer(e, false);
+  });
+  canvas.addEventListener('wheel', function(e){
+    e.preventDefault();
+    camDist = Math.max(5.5, Math.min(16, camDist + e.deltaY*0.01));
+    updateCamera();
+  }, {passive:false});
+  canvas.addEventListener('click', function(e){ pickAtPointer(e, true); });
+
+  var raycaster = new THREE.Raycaster();
+  var mouseV = new THREE.Vector2();
+  var activePart = null;
+  function pickAtPointer(e, isClick){
+    var r = canvas.getBoundingClientRect();
+    mouseV.x = ((e.clientX-r.left)/r.width)*2-1;
+    mouseV.y = -((e.clientY-r.top)/r.height)*2+1;
+    raycaster.setFromCamera(mouseV, camera);
+    var hits = raycaster.intersectObjects(pickables);
+    if(hits.length){
+      canvas.style.cursor = dragging? 'grabbing':'pointer';
+      var id = hits[0].object.userData.id;
+      tooltip.hidden = false;
+      tooltip.style.left = (e.clientX-r.left)+'px';
+      tooltip.style.top = (e.clientY-r.top)+'px';
+      tooltip.innerHTML = '<b>'+partInfo[id].title+'</b>'+partInfo[id].text;
+      if(isClick) setActivePart(id);
+    } else {
+      canvas.style.cursor = dragging? 'grabbing':'grab';
+      tooltip.hidden = true;
+    }
+  }
+  canvas.addEventListener('pointerleave', function(){ tooltip.hidden = true; });
+
+  function setActivePart(id){
+    activePart = id;
+    document.querySelectorAll('.part').forEach(function(p){
+      p.classList.toggle('active', p.dataset.part===id);
+    });
+  }
+  document.querySelectorAll('.part').forEach(function(p){
+    p.addEventListener('click', function(){ setActivePart(p.dataset.part); });
+  });
+
+  document.getElementById('btnReset').addEventListener('click', function(){
+    camDist=9.5; camYaw=0.55; camPitch=0.28; updateCamera();
+  });
+  var spinBtn = document.getElementById('btnSpin');
+  spinBtn.addEventListener('click', function(){
+    autoSpin = !autoSpin;
+    spinBtn.textContent = 'Auto-rotación: '+(autoSpin?'ON':'OFF');
+  });
+
+  var exploded = false;
+  document.getElementById('btnExplode').addEventListener('click', function(btn){
+    exploded = !exploded;
+    this.textContent = exploded? 'Vista ensamblada' : 'Vista explosionada';
+    viewerBadge.textContent = exploded? 'VISTA: EXPLOSIONADA' : 'VISTA: CORTE 270°';
+  });
+
+  /* ---- thermal / gap state driven by temperature (-10..25) ---- */
+  var currentTempC = 24;
+  var targetGap = 0, currentGap = 0;
+  var targetGas = 0, currentGas = 0;
+  var targetRingScale = 1, currentRingScale = 1;
+
+  function resilienceFromTemp(t){
+    // sigmoid centered ~10C, steep drop — illustrative curve matching the section's chart
+    var k = 0.45, mid = 9;
+    return 1/(1+Math.exp(-k*(t-mid)));
+  }
+
+  function applyTemperature(t, forceGapOpen){
+    currentTempC = t;
+    var res = resilienceFromTemp(t); // 0..1, 1 = fully resilient/warm
+    targetRingScale = 0.78 + 0.22*res;
+    var openness = forceGapOpen ? (1-res) : (1-res)*0.35;
+    targetGap = openness;
+    targetGas = forceGapOpen ? (1-res) : 0;
+  }
+  applyTemperature(24,false);
+
+  function setThermoToggle(groupId, mode){
+    var g = document.getElementById(groupId);
+    g.querySelectorAll('button').forEach(function(b){
+      b.classList.toggle('on', b.dataset.t===mode);
+    });
+  }
+  function wireThermo(groupId){
+    document.getElementById(groupId).querySelectorAll('button').forEach(function(b){
+      b.addEventListener('click', function(){
+        setThermoToggle('thermoToggleMini', b.dataset.t);
+        setThermoToggle('thermoToggleSeq', b.dataset.t);
+        if(b.dataset.t==='warm'){ applyTemperature(24, false); }
+        else { applyTemperature(-2, true); }
+      });
+    });
+  }
+  wireThermo('thermoToggleMini');
+  wireThermo('thermoToggleSeq');
+
+  /* ---- animate loop ---- */
+  var clock = new THREE.Clock();
+  function animate(){
+    requestAnimationFrame(animate);
+    var dt = Math.min(clock.getDelta(), 0.05);
+
+    if(autoSpin && !dragging){ camYaw += dt*0.12; updateCamera(); }
+
+    currentGap += (targetGap-currentGap)*Math.min(1,dt*2.2);
+    currentGas += (targetGas-currentGas)*Math.min(1,dt*2.2);
+    currentRingScale += (targetRingScale-currentRingScale)*Math.min(1,dt*2.2);
+
+    var explodeAmt = exploded ? 1 : 0;
+    var curExplode = (jointGroup.userData.ex||0) + (explodeAmt-(jointGroup.userData.ex||0))*Math.min(1,dt*3);
+    jointGroup.userData.ex = curExplode;
+
+    tang.position.y = 1.1 + curExplode*1.3 + currentGap*0.55;
+    tangCap.position.y = -0.4 + curExplode*1.3 + currentGap*0.55;
+    primaryRing.position.y = -0.62 + curExplode*0.55;
+    secondaryRing.position.y = -0.18 + curExplode*1.0;
+    putty.position.y = -0.42 + curExplode*0.3 + currentGap*0.25;
+    gapBand.position.y = -0.62 + curExplode*0.55;
+
+    primaryRing.scale.set(1, currentRingScale, 1);
+    secondaryRing.scale.set(1, (currentRingScale+1)/2, 1);
+
+    gapMat.opacity = Math.min(0.55, currentGap*1.4);
+    gasMat.opacity = currentGas*0.8;
+    pMat.opacity = currentGas*0.9;
+
+    // particles drifting outward/upward through the gap when gas is active
+    var posAttr = pGeo.attributes.position;
+    for(var i=0;i<PCOUNT;i++){
+      var s = pSeed[i];
+      s.life += dt*s.speed*(0.4+currentGas);
+      if(s.life>1) s.life -= 1;
+      var rad = 1.4 + s.life*1.1*(0.3+currentGas);
+      posAttr.array[i*3]   = Math.cos(s.a)*rad;
+      posAttr.array[i*3+1] = -0.62 + curExplode*0.55 + s.life*1.6 - 0.3;
+      posAttr.array[i*3+2] = Math.sin(s.a)*rad;
+    }
+    posAttr.needsUpdate = true;
+
+    // gentle hotspot pulse
+    var pulse = 0.85+Math.sin(performance.now()*0.003)*0.15;
+    hotspots.forEach(function(h){ h.scale.setScalar(pulse); });
+
+    renderer.render(scene, camera);
+  }
+  resize(); updateCamera(); animate();
+  new ResizeObserver(resize).observe(wrap);
+
+
+  /* =========================================================
+     GRÁFICO DBTT / Tg — canvas 2D
+     ========================================================= */
+  var chartCanvas = document.getElementById('dbttChart');
+  var ctx = chartCanvas.getContext('2d');
+  var tempSlider = document.getElementById('tempSlider');
+  var chartTempLabel = document.getElementById('chartTempLabel');
+  var chartResLabel = document.getElementById('chartResLabel');
+
+  function cssVar(name){ return getComputedStyle(document.documentElement).getPropertyValue(name).trim(); }
+
+  function drawChart(tempC){
+    var W = chartCanvas.width, H = chartCanvas.height;
+    var padL=46, padR=18, padT=16, padB=34;
+    ctx.clearRect(0,0,W,H);
+
+    var tMin=-10, tMax=25;
+    function x(t){ return padL + (t-tMin)/(tMax-tMin)*(W-padL-padR); }
+    function y(r){ return H-padB - r*(H-padT-padB); }
+
+    // grid
+    ctx.strokeStyle = 'rgba(154,167,194,0.14)';
+    ctx.lineWidth=1;
+    ctx.font = '11px IBM Plex Mono, monospace';
+    ctx.fillStyle = 'rgba(154,167,194,0.65)';
+    for(var t=tMin; t<=tMax; t+=5){
+      ctx.beginPath(); ctx.moveTo(x(t),padT); ctx.lineTo(x(t),H-padB); ctx.stroke();
+      ctx.fillText(t+'°', x(t)-8, H-padB+16);
+    }
+    for(var r=0; r<=1.001; r+=0.25){
+      ctx.beginPath(); ctx.moveTo(padL,y(r)); ctx.lineTo(W-padR,y(r)); ctx.stroke();
+      ctx.fillText(Math.round(r*100)+'%', 6, y(r)+4);
+    }
+
+    // curve
+    ctx.beginPath();
+    for(var tt=tMin; tt<=tMax; tt+=0.5){
+      var res = 1/(1+Math.exp(-0.45*(tt-9)));
+      var px=x(tt), py=y(res);
+      if(tt===tMin) ctx.moveTo(px,py); else ctx.lineTo(px,py);
+    }
+    var grad = ctx.createLinearGradient(x(tMin),0,x(tMax),0);
+    grad.addColorStop(0,'#5ec8f2'); grad.addColorStop(0.55,'#9aa7c2'); grad.addColorStop(1,'#ff7a45');
+    ctx.strokeStyle = grad; ctx.lineWidth=3; ctx.stroke();
+
+    // fill under curve
+    ctx.lineTo(x(tMax),H-padB); ctx.lineTo(x(tMin),H-padB); ctx.closePath();
+    var fillGrad = ctx.createLinearGradient(0,padT,0,H-padB);
+    fillGrad.addColorStop(0,'rgba(154,167,194,0.16)'); fillGrad.addColorStop(1,'rgba(154,167,194,0)');
+    ctx.fillStyle = fillGrad; ctx.fill();
+
+    // reference zone: flagged threshold ~12C (Thiokol recommendation)
+    ctx.save();
+    ctx.setLineDash([4,5]);
+    ctx.strokeStyle = 'rgba(255,181,69,0.55)';
+    ctx.beginPath(); ctx.moveTo(x(12),padT); ctx.lineTo(x(12),H-padB); ctx.stroke();
+    ctx.restore();
+    ctx.fillStyle='rgba(255,181,69,0.85)'; ctx.font='10px IBM Plex Mono, monospace';
+    ctx.fillText('12°C · límite recomendado por Thiokol', x(12)+6, padT+12);
+
+    // prior-flights cluster (grey)
+    [19,21,23,25,26,27].forEach(function(tf){
+      var res=1/(1+Math.exp(-0.45*(tf-9)));
+      ctx.beginPath(); ctx.arc(x(tf),y(res),3.2,0,Math.PI*2);
+      ctx.fillStyle='rgba(154,167,194,0.75)'; ctx.fill();
+    });
+
+    // real launch point (red, fixed at -2C)
+    var resLaunch = 1/(1+Math.exp(-0.45*(-2-9)));
+    ctx.beginPath(); ctx.arc(x(-2),y(resLaunch),5.5,0,Math.PI*2);
+    ctx.fillStyle='#ff4d5e'; ctx.fill();
+    ctx.lineWidth=2; ctx.strokeStyle='#1a0f08'; ctx.stroke();
+
+    // slider marker
+    var resCur = 1/(1+Math.exp(-0.45*(tempC-9)));
+    ctx.beginPath(); ctx.arc(x(tempC),y(resCur),7,0,Math.PI*2);
+    ctx.fillStyle = tempC<9 ? '#5ec8f2' : '#ffb545';
+    ctx.fill();
+    ctx.lineWidth=2.5; ctx.strokeStyle='#0a0e16'; ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(x(tempC),padT); ctx.lineTo(x(tempC),H-padB);
+    ctx.strokeStyle='rgba(255,255,255,0.25)'; ctx.lineWidth=1; ctx.setLineDash([2,3]); ctx.stroke(); ctx.setLineDash([]);
+
+    chartTempLabel.textContent = (tempC>=0?'+':'')+tempC.toFixed(1)+' °C';
+    chartResLabel.textContent = 'Resiliencia ≈ '+Math.round(resCur*100)+' %';
+  }
+  drawChart(24);
+
+  tempSlider.addEventListener('input', function(){
+    var t = parseFloat(this.value);
+    drawChart(t);
+    applyTemperature(t, t < 6); // below ~6C, force the gap/blow-by visualization too
+    setThermoToggle('thermoToggleMini', t<6?'cold':'warm');
+    setThermoToggle('thermoToggleSeq', t<6?'cold':'warm');
+  });
+
+
+  /* =========================================================
+     SECUENCIA DE FALLA — reproductor de pasos
+     ========================================================= */
+  var steps = [
+    {clock:'T − 00:00:03', tag:'NOMINAL', tagClass:'tag-normal',
+     title:'Cuenta regresiva',
+     desc:'La carcasa de acero D6AC está intacta; los O-rings de Vitón, bien asentados en sus ranuras, esperan la ignición.',
+     gapWarm:0.0, gapCold:0.0, gasWarm:0, gasCold:0},
+    {clock:'T + 00:00:00', tag:'NOMINAL', tagClass:'tag-normal',
+     title:'Ignición — la junta "respira"',
+     desc:'La presión interna sube a ~700 psi en milisegundos. La carcasa flexiona y el tang se separa levemente del clevis: es la "rotación de junta", un comportamiento esperado del diseño.',
+     gapWarm:0.35, gapCold:0.55, gasWarm:0, gasCold:0.05},
+    {clock:'T + 00:00:00,2', tag:'NOMINAL', tagClass:'tag-normal',
+     title:'El O-ring debe resellar en <0,6 s',
+     desc:'En condiciones normales (~24 °C) el O-ring, resiliente, se expande casi al instante y ocupa el hueco antes de que el gas caliente lo alcance.',
+     gapWarm:0.35, gapCold:0.55, gasWarm:0.05, gasCold:0.75},
+    {clock:'T + 00:00:00,6', tag:'CRÍTICO', tagClass:'tag-crit',
+     title:'En frío, el O-ring llega tarde',
+     desc:'A −2 °C la resiliencia del Vitón es tan baja que el anillo no sigue el movimiento de la junta: queda un paso abierto para el gas a 3 200 °C. Se documentaron "puffs" de humo negro en los primeros segundos de vuelo real.',
+     gapWarm:0.15, gapCold:0.6, gasWarm:0.02, gasCold:0.9},
+    {clock:'T + 00:00:59', tag:'CRÍTICO', tagClass:'tag-crit',
+     title:'El chorro se vuelve una llama sostenida',
+     desc:'El gas erosiona el sello y la fuga pasa de intermitente a continua: aparece una llama visible junto al tanque externo, calentando su estructura y el soporte entre el booster y el tanque.',
+     gapWarm:0.1, gapCold:0.75, gasWarm:0, gasCold:1},
+    {clock:'T + 00:01:13', tag:'CRÍTICO', tagClass:'tag-crit',
+     title:'Falla estructural y desintegración',
+     desc:'La llama debilita el tanque externo y el puntal de unión; el booster gira sobre su sujeción, el tanque de hidrógeno/oxígeno se rompe y la liberación estructural destruye el vehículo. La tripulación perdió la vida en el accidente.',
+     gapWarm:0.0, gapCold:0.2, gasWarm:0, gasCold:0.3}
+  ];
+  var curStep = 0, seqPlaying=false, seqMode='cold', seqTimer=null;
+
+  var seqDotsEl = document.getElementById('seqDots');
+  steps.forEach(function(_,i){
+    var d=document.createElement('div'); d.className='seq-dot'; seqDotsEl.appendChild(d);
+  });
+
+  function renderStep(){
+    var s = steps[curStep];
+    document.getElementById('seqStepLabel').textContent = 'Paso '+(curStep+1)+' / '+steps.length;
+    document.getElementById('seqClock').textContent = s.clock;
+    document.getElementById('seqFill').style.width = (curStep/(steps.length-1)*100)+'%';
+    var tagEl = document.getElementById('seqTag');
+    tagEl.textContent = s.tag; tagEl.className = 'seq-tag '+s.tagClass;
+    document.getElementById('seqTitle').textContent = s.title;
+    document.getElementById('seqDesc').textContent = s.desc;
+    Array.prototype.forEach.call(seqDotsEl.children, function(d,i){
+      d.className = 'seq-dot' + (i<curStep?' done':'') + (i===curStep?' now':'');
+    });
+    document.getElementById('btnPrev').disabled = curStep===0;
+    document.getElementById('btnNext').disabled = curStep===steps.length-1;
+
+    var gap = seqMode==='cold'? s.gapCold : s.gapWarm;
+    var gas = seqMode==='cold'? s.gasCold : s.gasWarm;
+    targetGap = gap; targetGas = gas;
+    targetRingScale = seqMode==='cold'? 0.84 : 1.0;
+  }
+  renderStep();
+
+  function wireSeqThermo(){
+    document.getElementById('thermoToggleSeq').querySelectorAll('button').forEach(function(b){
+      b.addEventListener('click', function(){ seqMode=b.dataset.t==='cold'?'cold':'warm'; renderStep(); });
+    });
+  }
+  wireSeqThermo();
+
+  document.getElementById('btnNext').addEventListener('click', function(){
+    if(curStep<steps.length-1){ curStep++; renderStep(); }
+  });
+  document.getElementById('btnPrev').addEventListener('click', function(){
+    if(curStep>0){ curStep--; renderStep(); }
+  });
+  var playBtn = document.getElementById('btnPlay');
+  playBtn.addEventListener('click', function(){
+    if(seqPlaying){ stopPlay(); return; }
+    seqPlaying = true; playBtn.textContent='⏸ Pausar';
+    if(curStep>=steps.length-1) curStep=0;
+    seqTimer = setInterval(function(){
+      if(curStep<steps.length-1){ curStep++; renderStep(); }
+      else { stopPlay(); }
+    }, 2600);
+  });
+  function stopPlay(){
+    seqPlaying=false; playBtn.textContent='▶ Reproducir secuencia';
+    clearInterval(seqTimer);
+  }
+
+  // keep the 3D joint's thermal visuals in sync whenever the mini toggle changes temp outside the slider
+  document.getElementById('thermoToggleMini').querySelectorAll('button').forEach(function(b){
+    b.addEventListener('click', function(){
+      tempSlider.value = b.dataset.t==='cold' ? -2 : 24;
+      drawChart(parseFloat(tempSlider.value));
+    });
+  });
+
+})();
+</script>
